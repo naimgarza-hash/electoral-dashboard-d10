@@ -1,9 +1,9 @@
+/* @import must be first — Leaflet CSS */
+@import 'leaflet/dist/leaflet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Leaflet CSS — imported here to avoid TypeScript issues with dynamic CSS imports */
-@import 'leaflet/dist/leaflet.css';
 
 /* Custom Leaflet tooltip */
 .electoral-tooltip {
