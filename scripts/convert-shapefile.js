@@ -15,6 +15,30 @@
 const shapefile = require('shapefile')
 const fs = require('fs')
 const path = require('path')
+const proj4 = require('proj4')
+
+// UTM Zone 14N (INE Mexico shapefiles use this projection)
+proj4.defs('EPSG:32614', '+proj=utm +zone=14 +datum=WGS84 +units=m +no_defs')
+
+// Recursively reproject GeoJSON coordinates from UTM Zone 14N → WGS84
+function reprojectCoords(coords) {
+  if (typeof coords[0] === 'number') {
+    const [lon, lat] = proj4('EPSG:32614', 'EPSG:4326', [coords[0], coords[1]])
+    return [lon, lat]
+  }
+  return coords.map(reprojectCoords)
+}
+
+function reprojectFeature(feature) {
+  if (!feature.geometry || !feature.geometry.coordinates) return feature
+  return {
+    ...feature,
+    geometry: {
+      ...feature.geometry,
+      coordinates: reprojectCoords(feature.geometry.coordinates),
+    },
+  }
+}
 
 // @turf/simplify may need CJS import
 let simplify
@@ -78,7 +102,7 @@ async function main() {
       : districtValue
 
     if (districtNum === TARGET_DISTRICT) {
-      features.push(feature)
+      features.push(reprojectFeature(feature))
     }
   }
 
