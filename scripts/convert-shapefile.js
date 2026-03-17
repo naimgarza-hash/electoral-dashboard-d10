@@ -53,9 +53,10 @@ const SHP_PATH = path.join(__dirname, 'shapefiles', 'SECCION.shp')
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'data', 'distrito10.geojson')
 const TARGET_DISTRICT = 10
 
-// Possible column names for the federal district number in INE shapefiles (case-insensitive)
-const DISTRICT_COLUMNS = ['DISTRITO_F', 'DISTRITO_FE', 'CVE_DISF', 'D_FED', 'DISFE',
-                           'distrito_f', 'distrito_fe', 'cve_disf', 'd_fed', 'disfe']
+// Use LOCAL district column (distrito_l). Change to 'distrito_f' for federal.
+const DISTRICT_COLUMNS = ['distrito_l', 'DISTRITO_L', 'distrito_f', 'DISTRITO_F',
+                           'DISTRITO_FE', 'CVE_DISF', 'D_FED', 'DISFE',
+                           'distrito_fe', 'cve_disf', 'd_fed', 'disfe']
 
 async function main() {
   if (!fs.existsSync(SHP_PATH)) {

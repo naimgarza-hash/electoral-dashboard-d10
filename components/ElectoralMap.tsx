@@ -78,21 +78,22 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
       const layer = L.geoJSON(data, {
         style: (feature: any) => styleFeature(feature),
         onEachFeature: (feature: any, layer: any) => {
+          const seccion = feature.properties?.seccion ?? feature.properties?.SECCION ?? '?'
+          layer.bindTooltip('', { sticky: true, className: 'electoral-tooltip' })
           layer.on({
             mouseover: (e: any) => {
               const l = e.target
               l.setStyle({ weight: 2.5, color: '#ffffff', fillOpacity: 0.95 })
               l.bringToFront()
 
-              const seccion = feature.properties?.seccion ?? feature.properties?.SECCION ?? '?'
               const count = alcanceMapRef.current.get(Number(seccion)) ?? 0
-              l.bindTooltip(
+              l.setTooltipContent(
                 `<div class="tooltip-content">
                   <span class="tooltip-seccion">Sección ${seccion}</span>
                   <span class="tooltip-count">${count.toLocaleString()} persona${count !== 1 ? 's' : ''}</span>
-                </div>`,
-                { sticky: true, className: 'electoral-tooltip' }
-              ).openTooltip()
+                </div>`
+              )
+              l.openTooltip()
             },
             mouseout: (e: any) => {
               layer.resetStyle(e.target)
