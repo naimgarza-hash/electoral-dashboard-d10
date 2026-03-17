@@ -59,7 +59,8 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
       const mapContainer = document.getElementById('electoral-map')
       if (!mapContainer || mapRef.current) return
 
-      const map = L.map('electoral-map')
+      // Default center: San Nicolás de los Garza, NL
+      const map = L.map('electoral-map', { center: [25.73, -100.30], zoom: 12 })
       mapRef.current = map
 
       // CartoDB Dark tiles
@@ -83,7 +84,7 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
               l.setStyle({ weight: 2.5, color: '#ffffff', fillOpacity: 0.95 })
               l.bringToFront()
 
-              const seccion = feature.properties?.SECCION ?? feature.properties?.CVE_SECC ?? '?'
+              const seccion = feature.properties?.seccion ?? feature.properties?.SECCION ?? '?'
               const count = alcanceMapRef.current.get(Number(seccion)) ?? 0
               l.bindTooltip(
                 `<div class="tooltip-content">
@@ -104,12 +105,19 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
       geoJsonLayerRef.current = layer
 
       // Fit map to district bounds
-      map.fitBounds(layer.getBounds(), { padding: [20, 20] })
+      try {
+        const bounds = layer.getBounds()
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, { padding: [20, 20] })
+        }
+      } catch (e) {
+        console.warn('fitBounds failed, using default NL view', e)
+      }
       setMapReady(true)
     }
 
     function styleFeature(feature: any) {
-      const seccion = feature.properties?.SECCION ?? feature.properties?.CVE_SECC
+      const seccion = feature.properties?.seccion ?? feature.properties?.SECCION
       const count = alcanceMapRef.current.get(Number(seccion)) ?? 0
       return {
         fillColor: getColor(count),
@@ -137,7 +145,7 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
 
     geoJsonLayerRef.current.eachLayer((layer: any) => {
       const feature = layer.feature
-      const seccion = feature.properties?.SECCION ?? feature.properties?.CVE_SECC
+      const seccion = feature.properties?.seccion ?? feature.properties?.SECCION
       const count = alcanceMap.get(Number(seccion)) ?? 0
       layer.setStyle({
         fillColor: getColor(count),
