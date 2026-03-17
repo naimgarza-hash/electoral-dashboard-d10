@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet CSS is imported dynamically in ElectoralMap.tsx */
+
+/* Custom Leaflet tooltip */
+.electoral-tooltip {
+  background: rgba(17, 24, 39, 0.95) !important;
+  border: 1px solid rgba(249, 115, 22, 0.4) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  color: white !important;
+  font-family: inherit !important;
+}
+
+.electoral-tooltip::before {
+  display: none !important;
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tooltip-seccion {
+  font-weight: 600;
+  font-size: 13px;
+  color: #fdba74;
+}
+
+.tooltip-count {
+  font-size: 12px;
+  color: #d1d5db;
+}
+
+/* Leaflet container fix */
+.leaflet-container {
+  background: #1a1a2e !important;
+  font-family: inherit !important;
+}
+
+/* Hide Leaflet attribution (keeps OSM, just styles it) */
+.leaflet-control-attribution {
+  background: rgba(0, 0, 0, 0.5) !important;
+  color: #6b7280 !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #9ca3af !important;
+}
+
+/* Custom scrollbar for log */
+.max-h-52::-webkit-scrollbar {
+  width: 4px;
+}
+.max-h-52::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+.max-h-52::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+.max-h-52::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
