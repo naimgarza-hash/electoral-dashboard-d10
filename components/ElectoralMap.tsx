@@ -39,9 +39,8 @@ export default function ElectoralMap({ alcanceMap, onSectionesTotal }: Props) {
     let L: any
 
     async function init() {
-      // Dynamic import to avoid SSR issues
+      // Dynamic import to avoid SSR issues (CSS is imported in globals.css)
       L = (await import('leaflet')).default
-      await import('leaflet/dist/leaflet.css')
 
       // Load GeoJSON
       const res = await fetch('/data/distrito10.geojson')

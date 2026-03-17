@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Leaflet CSS is imported dynamically in ElectoralMap.tsx */
+/* Leaflet CSS — imported here to avoid TypeScript issues with dynamic CSS imports */
+@import 'leaflet/dist/leaflet.css';
 
 /* Custom Leaflet tooltip */
 .electoral-tooltip {
