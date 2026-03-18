@@ -9,6 +9,21 @@ const supabaseKey =
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function POST(request: Request) {
+  // Capa 3: verificar cookie de sesión (defensa en profundidad)
+  const sessionToken = process.env.APP_SESSION_TOKEN
+  if (sessionToken) {
+    const cookieHeader = request.headers.get('cookie') ?? ''
+    const authToken = cookieHeader
+      .split(';')
+      .find((c) => c.trim().startsWith('auth_token='))
+      ?.split('=')[1]
+      ?.trim()
+
+    if (authToken !== sessionToken) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+  }
+
   let body: { seccion?: unknown }
   try {
     body = await request.json()
